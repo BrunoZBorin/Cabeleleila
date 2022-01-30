@@ -29,3 +29,7 @@ Route::resource('/attendances', AttendanceController::class);
 Route::get('/fones/search/{numero}', [FoneController::class, 'search']);
 Route::get('/clients/searchEmail/{email}', [ClientController::class, 'searchEmail']);
 Route::get('/searchAttendances/{id}', [AttendanceController::class, 'searchAttendances']);
+Route::get('/attendancesLastMonth', [AttendanceController::class, 'attendancesLastMonth']);
+Route::get('/attendancesLastWeek', [AttendanceController::class, 'attendancesLastWeek']);
+Route::get('/attendancesList', [AttendanceController::class, 'attendancesList']);
+Route::get('/showAttendance/{id}', [AttendanceController::class, 'showAttendance']);

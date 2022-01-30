@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Service;
+use App\Http\Requests\ServiceFormRequest;
 
 class ServiceController extends Controller
 {
@@ -23,7 +24,7 @@ class ServiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ServiceFormRequest $request)
     {
         return Service::create($request->all());
     }

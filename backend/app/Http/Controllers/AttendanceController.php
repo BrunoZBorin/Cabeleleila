@@ -25,7 +25,7 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AttendanceFormRequest $request)
     {
         return Attendance::create($request->all());
     }
@@ -92,5 +92,69 @@ class AttendanceController extends Controller
             $a->dataservice= Carbon::parse($a->dateservice)->format('d/m/y');
         }
         return response()->json($attendances, 200);
+    }
+    public function attendancesLastMonth()
+    {
+        $hoje = Carbon::now()->startOfDay();
+        $month = Carbon::now()->subDays(30);
+        
+        $attendances = DB::table('attendances')
+                        ->where('attendances.dateservice','<=',$hoje)
+                        ->where('attendances.dateservice','>=',$month)
+                        ->count();
+        $values = DB::table('attendances')
+                        ->leftJoin('services', 'services.id', '=', 'attendances.service_id')
+                        ->where('attendances.dateservice','<=',$hoje)
+                        ->where('attendances.dateservice','>=',$month)
+                        ->sum('services.value');
+        
+        return response()->json([$attendances, $values], 200);
+    }
+
+    public function attendancesLastWeek()
+    {
+        $hoje = Carbon::now()->startOfDay();
+        $week = Carbon::now()->subDays(7);
+        
+        $attendances = DB::table('attendances')
+                        ->where('attendances.dateservice','<=',$hoje)
+                        ->where('attendances.dateservice','>=',$week)
+                        ->count();
+        $values = DB::table('attendances')
+                        ->leftJoin('services', 'services.id', '=', 'attendances.service_id')
+                        ->where('attendances.dateservice','<=',$hoje)
+                        ->where('attendances.dateservice','>=',$week)
+                        ->sum('services.value');
+        
+        return response()->json([$attendances, $values], 200);
+    }
+    public function attendancesList()
+    {
+       
+
+        $attendances = DB::table('attendances')
+                        ->leftJoin('clients', 'clients.id', '=', 'attendances.client_id')
+                        ->leftJoin('services', 'services.id', '=', 'attendances.service_id')
+                        ->select('attendances.*', 'services.name as service', 'clients.name as client' )
+                        ->get();
+
+        
+        return response()->json($attendances, 200);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showAttendance($id)
+    {
+        $attendance = DB::table('attendances')
+                        ->leftJoin('clients', 'clients.id', '=', 'attendances.client_id')
+                        ->leftJoin('services', 'services.id', '=', 'attendances.service_id')
+                        ->where('attendances.id','=',$id)
+                        ->select('attendances.*', 'services.name as service', 'clients.name as client' )
+                        ->get();
+        return $attendance;
     }
 }
