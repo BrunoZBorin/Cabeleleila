@@ -48,7 +48,7 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ServiceFormRequest $request, $id)
     {
         $fservice = Service::find($id);
         $fservice->update($request->all());

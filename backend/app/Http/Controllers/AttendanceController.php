@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Requests\AttendanceFormRequest;
 
 class AttendanceController extends Controller
 {
@@ -27,7 +28,8 @@ class AttendanceController extends Controller
      */
     public function store(AttendanceFormRequest $request)
     {
-        return Attendance::create($request->all());
+        $att =  Attendance::create($request->all());
+        return response()->json($att, 201);
     }
 
     /**
@@ -49,7 +51,7 @@ class AttendanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AttendanceFormRequest $request, $id)
     {
         $attendance = Attendance::find($id);
         $attendance->update($request->all());
@@ -137,7 +139,11 @@ class AttendanceController extends Controller
                         ->leftJoin('services', 'services.id', '=', 'attendances.service_id')
                         ->select('attendances.*', 'services.name as service', 'clients.name as client' )
                         ->get();
-
+                        
+        foreach($attendances as $a)
+        {
+            $a->dataservice= Carbon::parse($a->dateservice)->format('d/m/y');
+        }
         
         return response()->json($attendances, 200);
     }
@@ -155,6 +161,7 @@ class AttendanceController extends Controller
                         ->where('attendances.id','=',$id)
                         ->select('attendances.*', 'services.name as service', 'clients.name as client' )
                         ->get();
+        
         return $attendance;
     }
 }

@@ -27,11 +27,7 @@ class ClientController extends Controller
     public function store(ClientFormRequest $request)
     {
         $client = Client::create($request->all());
-        $request->session()
-                ->flash(
-                    'message'
-                );
-        return $client;
+        return response()->json($client, 201);
     }
 
     /**
@@ -53,7 +49,7 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ClientFormRequest $request, $id)
     {
         $client = Client::find($id);
         $client->update($request->all());

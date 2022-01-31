@@ -25,8 +25,7 @@ class ClientFormRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3',
-            'email' => 'required',
-            'datebirth' => 'required',
+            'email' => 'required|unique:clients',
             'adress' => 'required',
             'zipcode' => 'required',
             'city' => 'required'
@@ -35,8 +34,14 @@ class ClientFormRequest extends FormRequest
     public function messages ()
     {
         return [
-            'required' => 'O campo :attribute é obrigatório',
-            'nome.min' => 'O campo nome precisa ter pelo menos três caracteres'
+            'name.required' => 'O campo nome é obrigatório',
+            'email.required' => 'O campo email é obrigatório',
+            'adress.required' => 'O campo endereço é obrigatório',
+            'zipcode.required' => 'O campo cep é obrigatório',
+            'city.required' => 'O campo cidade é obrigatório',
+            'email.unique' => 'Esse email já está cadastrado',
+            'name.min' => 'O campo nome precisa ter pelo menos três caracteres',
+
         ];
     }
 }
